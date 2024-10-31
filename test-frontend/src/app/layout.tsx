@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Link from 'next/link';
 import "./globals.css";
 
 const geistSans = localFont({
@@ -23,12 +24,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+          <header className="flex justify-center items-center gap-4">
+            <div className="flex items-center">
+              Navigation : 
+              <nav className="flex divide-x-2 divide-gray-300">
+                <Link className="p-2 text-center" href="/">Fruit and Vegetable</Link>
+                <Link className="p-2 text-center" href="/department">Department</Link>
+              </nav>
+            </div>
+          </header>
+          {children}
+        </div>
       </body>
     </html>
   );

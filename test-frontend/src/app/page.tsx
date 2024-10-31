@@ -74,45 +74,44 @@ export default function Home() {
   }
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <div className="grid grid-cols-3 gap-4">
-          <div className="trask-todo border border-gray-400">
-            <div className="trask-vegetable__header p-4 border-b border-gray-400 text-center"><h2 className="text-2xl font-bold">To Do</h2></div>
+    <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+      <h1 className="text-4xl font-bold">Fruit and Vegetable</h1>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="trask-todo border border-gray-400">
+          <div className="trask-vegetable__header p-4 border-b border-gray-400 text-center"><h2 className="text-2xl font-bold">To Do</h2></div>
+          <ul className="list-none p-3 space-y-3">
+            {list.map((item, index) => (
+              <li aria-hidden="true" className='p-4 text-center border border-gray-300' key={index} onClick={() => handleItemClick(item.type, item.name)}>
+                <span>{item.name}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="trask-fruit border border-gray-400">
+          <div className="trask-vegetable__header p-4 border-b border-gray-400 text-center"><h2 className="text-2xl font-bold">Fruit</h2></div>
+          {fruitList.length > 0 && (
             <ul className="list-none p-3 space-y-3">
-              {list.map((item, index) => (
-                <li aria-hidden="true" className='p-4 text-center border border-gray-300' key={index} onClick={() => handleItemClick(item.type, item.name)}>
+              {fruitList.map((item, index) => (
+                <li aria-hidden="true" className='p-4 text-center border border-gray-300' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
                   <span>{item.name}</span>
                 </li>
               ))}
             </ul>
-          </div>
-          <div className="trask-fruit border border-gray-400">
-            <div className="trask-vegetable__header p-4 border-b border-gray-400 text-center"><h2 className="text-2xl font-bold">Fruit</h2></div>
-            {fruitList.length > 0 && (
-              <ul className="list-none p-3 space-y-3">
-                {fruitList.map((item, index) => (
-                  <li aria-hidden="true" className='p-4 text-center border border-gray-300' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
-                    <span>{item.name}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div className="trask-vegetable border border-gray-400">
-            <div className="trask-vegetable__header p-4 border-b border-gray-400 text-center"><h2 className="text-2xl font-bold">Vegetable</h2></div>
-            {vegetableList.length > 0 && (
-              <ul className="list-none p-3 space-y-3">
-                {vegetableList.map((item, index) => (
-                  <li aria-hidden="true" className='p-4 text-center border border-gray-300' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
-                    <span>{item.name}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          )}
         </div>
-      </main>
-    </div>
+        <div className="trask-vegetable border border-gray-400">
+          <div className="trask-vegetable__header p-4 border-b border-gray-400 text-center"><h2 className="text-2xl font-bold">Vegetable</h2></div>
+          {vegetableList.length > 0 && (
+            <ul className="list-none p-3 space-y-3">
+              {vegetableList.map((item, index) => (
+                <li aria-hidden="true" className='p-4 text-center border border-gray-300' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
+                  <span>{item.name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </main>
   );
 }
