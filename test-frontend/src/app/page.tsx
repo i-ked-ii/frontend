@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 type ListArray = {
   type: string;
@@ -25,47 +25,53 @@ export default function Home() {
   const [list, setList] = useState<ListArray[]>(defaultList);
   const [fruitList, setFruitList] = useState<ListArray[]>([]);
   const [vegetableList, setVegetableList] = useState<ListArray[]>([]);
+  const timers = new Map<string, NodeJS.Timeout>();
+
+  const startTimer = (item: ListArray, setTypeList: React.Dispatch<React.SetStateAction<ListArray[]>>) => {
+    if (timers.has(item.name)) {
+      clearTimeout(timers.get(item.name)!);
+    }
+
+    const timer = setTimeout(() => {
+      setTypeList((prev) => prev.filter((i) => i.name !== item.name));
+      setList((prev) => [...prev, item]);
+      timers.delete(item.name);
+    }, 5000);
+
+    timers.set(item.name, timer);
+  };
 
   const handleItemClick = (type: string, name: string) => {
     const newList = list.filter((item) => item.type !== type || item.name !== name);
     setList(newList);
+
     switch (type) {
       case 'Fruit':
         setFruitList([...fruitList, { type, name }]);
+        startTimer({ type, name }, setFruitList);
         break;
       case 'Vegetable':
         setVegetableList([...vegetableList, { type, name }]);
+        startTimer({ type, name }, setVegetableList);
         break;
     }
   }
 
   const handleItemRemoveToMain = (type: string, name: string) => {
+    if (timers.has(name)) {
+      clearTimeout(timers.get(name)!);
+      timers.delete(name);
+    }
     switch (type) {
       case 'Fruit':
-        setFruitList(fruitList.filter((item) => item.name !== name));
-        setList([...list, { type, name }]);
+        setFruitList((prev) => prev.filter((item) => item.name !== name));
         break;
       case 'Vegetable':
-        setVegetableList(vegetableList.filter((item) => item.name !== name));
-        setList([...list, { type, name }]);
+        setVegetableList((prev) => prev.filter((item) => item.name !== name));
         break;
     }
+    setList((prev) => [...prev, { type, name }]);
   }
-
-  useEffect(() => {
-    let timeLeft = 5;
-    if (vegetableList.length > 0 && fruitList.length > 0) {
-      const interval = setInterval(() => {
-        if (timeLeft === 0) {
-          setFruitList([]);
-          setVegetableList([]);
-          setList(defaultList);
-          clearInterval(interval);
-        }
-        timeLeft -= 1;
-      }, 1000);
-    }
-  }, [vegetableList, fruitList]);
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
