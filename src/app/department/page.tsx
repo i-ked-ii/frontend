@@ -11,6 +11,7 @@ export default function Home() {
             const response = await fetch('/api/department');
             const data: SummaryByDepartment = await response.json();
             setSummary(data);
+            console.log('data', data);
         }
         fetchSummary();
     }, []);
