@@ -81,7 +81,7 @@ export default function Home() {
           <div className="trask-vegetable__header p-4 border-b border-gray-400 text-center"><h2 className="text-2xl font-bold">To Do</h2></div>
           <ul className="list-none p-3 space-y-3">
             {list.map((item, index) => (
-              <li aria-hidden="true" className='p-4 text-center border border-gray-300' key={index} onClick={() => handleItemClick(item.type, item.name)}>
+              <li aria-hidden="true" className='p-4 text-center border border-gray-300 cursor-pointer' key={index} onClick={() => handleItemClick(item.type, item.name)}>
                 <span>{item.name}</span>
               </li>
             ))}
@@ -92,7 +92,7 @@ export default function Home() {
           {fruitList.length > 0 && (
             <ul className="list-none p-3 space-y-3">
               {fruitList.map((item, index) => (
-                <li aria-hidden="true" className='p-4 text-center border border-gray-300' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
+                <li aria-hidden="true" className='p-4 text-center border border-gray-300 cursor-pointer' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
                   <span>{item.name}</span>
                 </li>
               ))}
@@ -104,7 +104,7 @@ export default function Home() {
           {vegetableList.length > 0 && (
             <ul className="list-none p-3 space-y-3">
               {vegetableList.map((item, index) => (
-                <li aria-hidden="true" className='p-4 text-center border border-gray-300' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
+                <li aria-hidden="true" className='p-4 text-center border border-gray-300 cursor-pointer' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
                   <span>{item.name}</span>
                 </li>
               ))}
