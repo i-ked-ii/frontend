@@ -3,7 +3,7 @@ export type User = {
     firstName: string;
     lastName: string;
     age: number;
-    gender: string;
+    gender: 'male' | 'female';
     hair: { color: string };
     address: { postalCode: string };
     department: string;
