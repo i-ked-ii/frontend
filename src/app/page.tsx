@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 type ListArray = {
   type: string;
@@ -25,21 +25,21 @@ export default function Home() {
   const [list, setList] = useState<ListArray[]>(defaultList);
   const [fruitList, setFruitList] = useState<ListArray[]>([]);
   const [vegetableList, setVegetableList] = useState<ListArray[]>([]);
-  const timers = new Map<string, NodeJS.Timeout>();
+  const timers = useRef(new Map<string, NodeJS.Timeout>());
 
   const startTimer = (item: ListArray, setTypeList: React.Dispatch<React.SetStateAction<ListArray[]>>) => {
-    if (timers.has(item.name)) {
-      clearTimeout(timers.get(item.name)!);
+    if (timers.current.has(item.name)) {
+      clearTimeout(timers.current.get(item.name)!);
     }
 
     const timer = setTimeout(() => {
       setTypeList((prev) => prev.filter((i) => i.name !== item.name));
       setList((prev) => [...prev, item]);
-      timers.delete(item.name);
+      timers.current.delete(item.name);
     }, 5000);
 
-    timers.set(item.name, timer);
-  };
+    timers.current.set(item.name, timer);
+  }
 
   const handleItemClick = (type: string, name: string) => {
     const newList = list.filter((item) => item.type !== type || item.name !== name);
@@ -58,10 +58,11 @@ export default function Home() {
   }
 
   const handleItemRemoveToMain = (type: string, name: string) => {
-    if (timers.has(name)) {
-      clearTimeout(timers.get(name)!);
-      timers.delete(name);
+    if (timers.current.has(name)) {
+      clearTimeout(timers.current.get(name)!);
+      timers.current.delete(name);
     }
+
     switch (type) {
       case 'Fruit':
         setFruitList((prev) => prev.filter((item) => item.name !== name));
@@ -70,8 +71,16 @@ export default function Home() {
         setVegetableList((prev) => prev.filter((item) => item.name !== name));
         break;
     }
+
     setList((prev) => [...prev, { type, name }]);
   }
+
+  useEffect(() => {
+    return () => {
+      timers.current.forEach((timer) => clearTimeout(timer));
+      timers.current.clear();
+    };
+  }, []);
 
   return (
     <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -81,7 +90,12 @@ export default function Home() {
           <div className="trask-vegetable__header p-4 border-b border-gray-400 text-center"><h2 className="text-2xl font-bold">To Do</h2></div>
           <ul className="list-none p-3 space-y-3">
             {list.map((item, index) => (
-              <li aria-hidden="true" className='p-4 text-center border border-gray-300 cursor-pointer' key={index} onClick={() => handleItemClick(item.type, item.name)}>
+              <li
+                aria-hidden="true"
+                className='p-4 text-center border border-gray-300 cursor-pointer'
+                key={index}
+                onClick={() => handleItemClick(item.type, item.name)}
+              >
                 <span>{item.name}</span>
               </li>
             ))}
@@ -92,7 +106,12 @@ export default function Home() {
           {fruitList.length > 0 && (
             <ul className="list-none p-3 space-y-3">
               {fruitList.map((item, index) => (
-                <li aria-hidden="true" className='p-4 text-center border border-gray-300 cursor-pointer' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
+                <li
+                  aria-hidden="true"
+                  className='p-4 text-center border border-gray-300 cursor-pointer'
+                  key={index}
+                  onClick={() => handleItemRemoveToMain(item.type, item.name)}
+                >
                   <span>{item.name}</span>
                 </li>
               ))}
@@ -104,7 +123,12 @@ export default function Home() {
           {vegetableList.length > 0 && (
             <ul className="list-none p-3 space-y-3">
               {vegetableList.map((item, index) => (
-                <li aria-hidden="true" className='p-4 text-center border border-gray-300 cursor-pointer' key={index} onClick={() => handleItemRemoveToMain(item.type, item.name)}>
+                <li
+                  aria-hidden="true"
+                  className='p-4 text-center border border-gray-300 cursor-pointer'
+                  key={index}
+                  onClick={() => handleItemRemoveToMain(item.type, item.name)}
+                >
                   <span>{item.name}</span>
                 </li>
               ))}
